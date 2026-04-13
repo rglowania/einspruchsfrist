@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Einspruchsfrist</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ═══════════════════════════════════════════════════════════════
+   G-DESIGN — Template v1.1
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Tokens ─────────────────────────────────────────────────── */
+:root,[data-theme="dark"]{
+  --bg:        #0c1410;
+  --surface:   #13201a;
+  --surface2:  #192b22;
+  --border:    #213328;
+  --accent:    #5d9e7a;
+  --accent-lt: #89c4a2;
+  --accent-dim:rgba(93,158,122,0.13);
+  --text:      #ddeee5;
+  --text-muted:#6e9480;
+}
+[data-theme="light"]{
+  --bg:        #f0f7f3;
+  --surface:   #ffffff;
+  --surface2:  #e6f2eb;
+  --border:    #bdd8c8;
+  --accent:    #2e7a50;
+  --accent-lt: #1e5c3a;
+  --accent-dim:rgba(46,122,80,0.10);
+  --text:      #0f1f16;
+  --text-muted:#4d7a5e;
+}
+@media(prefers-color-scheme:light){
+  :root:not([data-theme]){
+    --bg:#f0f7f3;--surface:#ffffff;--surface2:#e6f2eb;--border:#bdd8c8;
+    --accent:#2e7a50;--accent-lt:#1e5c3a;--accent-dim:rgba(46,122,80,0.10);
+    --text:#0f1f16;--text-muted:#4d7a5e;
+  }
+}
+
+/* ── Reset ──────────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0;}
+
+/* ── Body & Hintergrund-Grid ────────────────────────────────── */
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'IBM Plex Sans',sans-serif;font-weight:300;
+  font-feature-settings:"ss01";
+  min-height:100vh;padding:40px 20px 80px;
+  transition:background .25s,color .25s;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(93,158,122,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(93,158,122,0.04) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+
+/* ── Layout ─────────────────────────────────────────────────── */
+.container{max-width:760px;margin:0 auto;position:relative;z-index:1;}
+
+/* ── Theme-Toggle ───────────────────────────────────────────── */
+.theme-toggle{
+  position:fixed;top:18px;right:20px;display:flex;gap:3px;
+  z-index:1000;background:var(--surface);border:1px solid var(--border);padding:4px;
+}
+.theme-btn{
+  width:28px;height:28px;background:transparent;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text-muted);transition:all .2s;padding:0;
+}
+.theme-btn:hover{color:var(--accent);}
+.theme-btn.active{color:var(--accent);background:var(--accent-dim);}
+.theme-btn svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+/* ── Typografie ─────────────────────────────────────────────── */
+h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(26px,5vw,44px);font-weight:600;
+  line-height:1.15;color:var(--text);margin-bottom:10px;
+}
+h1 span{color:var(--accent);}
+h2{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(18px,3vw,26px);font-weight:600;
+  color:var(--text);margin-bottom:8px;
+}
+.subtitle{
+  font-size:12px;color:var(--text-muted);
+  font-family:'IBM Plex Mono',monospace;letter-spacing:0.5px;
+}
+.badge{
+  display:inline-block;font-family:'IBM Plex Mono',monospace;
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--accent);border:1px solid var(--accent-dim);padding:4px 14px;margin-bottom:18px;
+}
+.card-title{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;
+  letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:18px;
+}
+.hint{font-size:10px;color:var(--text-muted);margin-top:5px;font-family:'IBM Plex Mono',monospace;line-height:1.5;}
+.hint b{color:var(--accent-lt);}
+.note{font-size:10px;color:var(--text-muted);margin-top:14px;line-height:1.7;font-family:'IBM Plex Mono',monospace;}
+
+/* ── Disclaimer ─────────────────────────────────────────────── */
+.disclaimer{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;
+  color:var(--text-muted);line-height:1.7;opacity:.7;
+  margin-top:32px;
+}
+
+/* ── Footer ─────────────────────────────────────────────── */
+footer{
+  text-align:center;padding:32px 0 0;
+  font-family:'IBM Plex Mono',monospace;font-size:10px;
+  letter-spacing:1px;color:var(--text-muted);opacity:.6;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ENDE G-DESIGN — App-spezifisches CSS
+   ═══════════════════════════════════════════════════════════════ */
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-left:3px solid var(--accent);
+  padding:28px 32px;
+  margin-bottom:20px;
+}
+
+label span.lbl{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--text-muted);display:block;margin-bottom:6px;
+}
+input[type="date"], select{
+  width:100%;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  color:var(--text);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:14px;
+  padding:10px 14px;
+  outline:none;
+  appearance:none;
+  -webkit-appearance:none;
+}
+input[type="date"]:focus, select:focus{
+  border-color:var(--accent);
+}
+input[type="date"]::-webkit-calendar-picker-indicator{
+  filter: invert(0.6);
+  cursor:pointer;
+}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media(max-width:580px){.grid2{grid-template-columns:1fr;}}
+
+.btn-primary{
+  width:100%;padding:14px;
+  background:var(--accent);color:#fff;
+  border:none;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;letter-spacing:3px;text-transform:uppercase;
+  cursor:pointer;transition:opacity .2s;
+  margin-top:8px;
+}
+.btn-primary:hover{opacity:.85;}
+
+/* Ergebnis */
+#result{
+  display:none;
+  background:var(--accent-dim);
+  border:1px solid var(--accent);
+  border-left:3px solid var(--accent);
+  padding:28px 32px;
+  margin-top:0;
+}
+.result-row{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding:10px 0;
+  border-bottom:1px solid var(--border);
+  gap:16px;
+}
+.result-row:last-child{border-bottom:none;}
+.result-label{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--text-muted);flex-shrink:0;
+}
+.result-value{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:15px;color:var(--text);
+  text-align:right;
+}
+.result-value.big{
+  font-family:'Playfair Display',serif;
+  font-size:28px;color:var(--accent);
+  font-weight:600;
+}
+.result-value.warning{color:#e07b54;}
+
+/* Warnbox */
+.warnbox{
+  background:rgba(224,123,84,0.12);
+  border:1px solid rgba(224,123,84,0.4);
+  border-left:3px solid #e07b54;
+  padding:16px 20px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;color:#e07b54;
+  line-height:1.7;
+  margin-top:16px;
+  display:none;
+}
+
+/* Fristbalken */
+.frist-bar-wrap{margin-top:20px;}
+.frist-bar-label{
+  display:flex;justify-content:space-between;
+  font-family:'IBM Plex Mono',monospace;font-size:10px;
+  color:var(--text-muted);margin-bottom:6px;
+  letter-spacing:1px;
+}
+.frist-bar-bg{
+  height:6px;background:var(--surface2);border:1px solid var(--border);
+}
+.frist-bar-fg{
+  height:100%;background:var(--accent);
+  transition:width .4s ease;max-width:100%;
+}
+.frist-bar-fg.warn{background:#e07b54;}
+.frist-bar-fg.over{background:#c0392b;}
+
+</style>
+</head>
+<body>
+
+<!-- ── Theme-Toggle ──────────────────────────────────────────── -->
+<div class="theme-toggle">
+  <button class="theme-btn" id="btn-dark" onclick="setTheme('dark')" title="Dunkel">
+    <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+  <button class="theme-btn" id="btn-system" onclick="setTheme('system')" title="System">
+    <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+  </button>
+  <button class="theme-btn" id="btn-light" onclick="setTheme('light')" title="Hell">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+</div>
+
+<div class="container">
+
+  <header style="text-align:center;margin-bottom:40px;">
+    <h1><span>Einspruchs</span>frist</h1>
+    <p class="subtitle">Einspruchsfrist · § 355 AO</p>
+  </header>
+
+  <!-- Eingabe -->
+  <div class="card">
+    <div class="card-title">Eingabe</div>
+
+    <div class="grid2" style="margin-bottom:20px;">
+      <label>
+        <span class="lbl">Bescheiddatum</span>
+        <input type="date" id="bescheidDatum">
+        <p class="hint">Ausstellungsdatum des Steuerbescheids</p>
+      </label>
+      <label>
+        <span class="lbl">Tatsächlicher Zugang</span>
+        <input type="date" id="bekanntgabeDatum">
+        <p class="hint"><b>Nur ausfüllen, falls der Bescheid später als 4 Tage nach Ausstellung zugegangen ist</b> (§ 122 Abs. 2 AO). Sonst leer lassen.</p>
+      </label>
+    </div>
+
+    <button class="btn-primary" onclick="berechnen()">Frist berechnen</button>
+  </div>
+
+  <!-- Ergebnis -->
+  <div id="result" class="card" style="border-left-color:var(--accent);">
+    <div class="card-title">Ergebnis</div>
+
+    <div class="result-row">
+      <span class="result-label" data-label="bescheid">Bescheiddatum</span>
+      <span class="result-value" id="r-bescheid">—</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label" data-label="bekanntgabe">Bekanntgabe</span>
+      <span class="result-value" id="r-bekanntgabe">—</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label">Fristbeginn</span>
+      <span class="result-value" id="r-fristbeginn">—</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label">Fristende (rechnerisch)</span>
+      <span class="result-value" id="r-fristende-rech">—</span>
+    </div>
+    <div class="result-row" style="border-bottom:none;">
+      <span class="result-label">Fristende (maßgeblich)</span>
+      <span class="result-value big" id="r-fristende">—</span>
+    </div>
+
+    <!-- Verbleibende Tage -->
+    <div class="result-row" style="border-top:1px solid var(--border);margin-top:4px;padding-top:14px;">
+      <span class="result-label">Heute</span>
+      <span class="result-value" id="r-heute">—</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label">Verbleibende Tage</span>
+      <span class="result-value" id="r-verbleibend">—</span>
+    </div>
+
+    <!-- Fortschrittsbalken -->
+    <div class="frist-bar-wrap" id="bar-wrap">
+      <div class="frist-bar-label">
+        <span>Bekanntgabe</span>
+        <span id="bar-pct">—</span>
+        <span>Fristende</span>
+      </div>
+      <div class="frist-bar-bg">
+        <div class="frist-bar-fg" id="bar-fg" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Warnbox -->
+  <div class="warnbox" id="warnbox"></div>
+
+  <p class="disclaimer">Alle Berechnungen sind Näherungswerte auf Basis der jeweils angegebenen Rechtsgrundlagen. Fristverschiebungen durch Sonn- und Feiertage werden berücksichtigt (bundesweite gesetzliche Feiertage); landesspezifische Feiertage und individuelle Umstände bleiben unberücksichtigt. Kein Ersatz für individuelle Steuer- oder Rechtsberatung · Alle Angaben ohne Gewähr</p>
+
+</div>
+
+<footer>© Robin Glowania · Zuletzt aktualisiert: 13.04.2025</footer>
+
+<script>
+/* ── Theme ──────────────────────────────────────────────────── */
+function setTheme(t) {
+  if (t === 'system') {
+    document.documentElement.removeAttribute('data-theme');
+  } else {
+    document.documentElement.setAttribute('data-theme', t);
+  }
+  try { localStorage.setItem('g-theme', t); } catch(e){}
+  document.querySelectorAll('.theme-btn').forEach(function(b){ b.classList.remove('active'); });
+  var btn = document.getElementById('btn-' + t);
+  if (btn) btn.classList.add('active');
+}
+(function(){
+  var saved = 'system';
+  try { saved = localStorage.getItem('g-theme') || 'system'; } catch(e){}
+  setTheme(saved);
+})();
+
+/* ── UI Logik ───────────────────────────────────────────────── */
+document.getElementById('bekanntgabe').addEventListener('change', function(){
+  document.getElementById('customDateRow').style.display =
+    this.value === 'custom' ? 'block' : 'none';
+});
+document.getElementById('fristtyp').addEventListener('change', function(){
+  document.getElementById('customDaysRow').style.display =
+    this.value === 'custom_days' ? 'block' : 'none';
+});
+
+/* ── Bundesweite Feiertage ──────────────────────────────────── */
+function getFeiertage(year) {
+  // Osterberechnung (Gaußsche Methode)
+  var a = year % 19, b = Math.floor(year / 100), c = year % 100;
+  var d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
+  var g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+  var i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7;
+  var m = Math.floor((a + 11 * h + 22 * l) / 451);
+  var month = Math.floor((h + l - 7 * m + 114) / 31);
+  var day = ((h + l - 7 * m + 114) % 31) + 1;
+  var ostern = new Date(year, month - 1, day);
+
+  function addDays(d, n){ var r = new Date(d); r.setDate(r.getDate()+n); return r; }
+  function fmtKey(d){ return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
+
+  var feiertage = [
+    new Date(year,0,1),   // Neujahr
+    new Date(year,0,6),   // Heilige Drei Könige (nicht bundesweit, aber einbezogen für Vollständigkeit)
+    addDays(ostern,-2),   // Karfreitag
+    addDays(ostern,1),    // Ostermontag
+    new Date(year,4,1),   // Tag der Arbeit
+    addDays(ostern,39),   // Christi Himmelfahrt
+    addDays(ostern,50),   // Pfingstmontag
+    new Date(year,9,3),   // Tag der deutschen Einheit
+    new Date(year,10,1),  // Allerheiligen (nicht bundesweit)
+    new Date(year,11,25), // 1. Weihnachtstag
+    new Date(year,11,26), // 2. Weihnachtstag
+  ];
+  var keys = {};
+  feiertage.forEach(function(f){ keys[fmtKey(f)] = true; });
+  return keys;
+}
+
+function istFeiertag(date, feiertagsCache) {
+  var key = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+  if (!feiertagsCache[date.getFullYear()]) {
+    feiertagsCache[date.getFullYear()] = getFeiertage(date.getFullYear());
+  }
+  return !!feiertagsCache[date.getFullYear()][key];
+}
+
+function naechsterWerktag(date) {
+  var cache = {};
+  var d = new Date(date);
+  // Prüfe ob bereits Werktag
+  while(d.getDay() === 0 || d.getDay() === 6 || istFeiertag(d, cache)) {
+    d.setDate(d.getDate()+1);
+  }
+  return d;
+}
+
+/* ── Monatsende berechnen (§ 108 AO i.V.m. § 188 BGB) ─────── */
+function addMonat(date, monate) {
+  var d = new Date(date);
+  var targetMonth = d.getMonth() + monate;
+  var targetYear = d.getFullYear() + Math.floor(targetMonth / 12);
+  targetMonth = targetMonth % 12;
+  // Monatsende: letzter Tag des Zielmonats wenn nötig
+  var maxDay = new Date(targetYear, targetMonth + 1, 0).getDate();
+  d.setFullYear(targetYear);
+  d.setMonth(targetMonth);
+  d.setDate(Math.min(d.getDate(), maxDay));
+  return d;
+}
+
+/* ── Formatierung ───────────────────────────────────────────── */
+function fmtDate(d) {
+  if (!d) return '—';
+  var day = String(d.getDate()).padStart(2,'0');
+  var mo = String(d.getMonth()+1).padStart(2,'0');
+  var wochentage = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+  return wochentage[d.getDay()] + ', ' + day + '.' + mo + '.' + d.getFullYear();
+}
+
+function parseDate(str) {
+  if (!str) return null;
+  var parts = str.split('-');
+  return new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+}
+
+/* ── Hauptberechnung ────────────────────────────────────────── */
+function berechnen() {
+  var bescheidStr = document.getElementById('bescheidDatum').value;
+  if (!bescheidStr) { alert('Bitte Bescheiddatum eingeben.'); return; }
+
+  var bescheid = parseDate(bescheidStr);
+  var zugangStr = document.getElementById('bekanntgabeDatum').value;
+  var cache = {};
+
+  // Bekanntgabe: tatsächlicher Zugang wenn angegeben, sonst +4-Tage-Fiktion
+  var bekanntgabe;
+  var bekanntgabeHinweis = '';
+  var bekanntgabeVerschoben = false;
+  var bekanntgabeRech = null;
+  if (zugangStr) {
+    bekanntgabe = parseDate(zugangStr);
+    bekanntgabeHinweis = '(tatsächlicher Zugang)';
+  } else {
+    bekanntgabeRech = new Date(bescheid);
+    bekanntgabeRech.setDate(bekanntgabeRech.getDate() + 4);
+    bekanntgabe = naechsterWerktag(bekanntgabeRech);
+    bekanntgabeVerschoben = bekanntgabe.getTime() !== bekanntgabeRech.getTime();
+    bekanntgabeHinweis = '(+4-Tage-Fiktion § 122 Abs. 2 AO)';
+  }
+
+  // Fristbeginn = Tag nach Bekanntgabe (§ 187 Abs. 1 BGB)
+  var fristbeginn = new Date(bekanntgabe);
+  fristbeginn.setDate(fristbeginn.getDate() + 1);
+
+  // Fristende rechnerisch: Bekanntgabe + 1 Monat (§ 188 Abs. 2 BGB, § 355 AO)
+  var fristEndeRech = addMonat(bekanntgabe, 1);
+
+  // Fristende maßgeblich: § 108 Abs. 3 AO — fällt auf Sa/So/Feiertag → nächster Werktag
+  var fristEndeMass = naechsterWerktag(fristEndeRech);
+
+  // Heute
+  var heute = new Date();
+  heute.setHours(0,0,0,0);
+  var verbleibend = Math.round((fristEndeMass - heute) / (1000*60*60*24));
+
+  // Gesamtfrist für Balken
+  var gesamtTage = Math.round((fristEndeMass - bekanntgabe) / (1000*60*60*24));
+  var verstrichen = Math.round((heute - bekanntgabe) / (1000*60*60*24));
+  var pct = gesamtTage > 0 ? Math.max(0, Math.min(100, Math.round(verstrichen / gesamtTage * 100))) : 100;
+
+  // DOM befüllen
+  document.getElementById('r-bescheid').textContent = fmtDate(bescheid);
+  document.getElementById('r-bekanntgabe').textContent = fmtDate(bekanntgabe) + ' ' + bekanntgabeHinweis;
+  document.getElementById('r-fristbeginn').textContent = fmtDate(fristbeginn) + ' (Tag nach Bekanntgabe)';
+  document.getElementById('r-fristende-rech').textContent = fmtDate(fristEndeRech) + ' — 1 Monat ab Bekanntgabe (§ 355 AO)';
+
+  var massEl = document.getElementById('r-fristende');
+  massEl.textContent = fmtDate(fristEndeMass);
+  var verschoben = fristEndeMass.getTime() !== fristEndeRech.getTime();
+
+  document.getElementById('r-heute').textContent = fmtDate(heute);
+
+  var verblEl = document.getElementById('r-verbleibend');
+  if (verbleibend < 0) {
+    verblEl.textContent = 'Frist abgelaufen (vor ' + Math.abs(verbleibend) + ' Tagen)';
+    verblEl.className = 'result-value warning';
+    massEl.className = 'result-value big warning';
+  } else if (verbleibend === 0) {
+    verblEl.textContent = 'Heute letzter Tag!';
+    verblEl.className = 'result-value warning';
+    massEl.className = 'result-value big warning';
+  } else if (verbleibend <= 7) {
+    verblEl.textContent = verbleibend + ' Tage';
+    verblEl.className = 'result-value warning';
+    massEl.className = 'result-value big warning';
+  } else {
+    verblEl.textContent = verbleibend + ' Tage';
+    verblEl.className = 'result-value';
+    massEl.className = 'result-value big';
+  }
+
+  // Fortschrittsbalken
+  var barFg = document.getElementById('bar-fg');
+  barFg.style.width = pct + '%';
+  barFg.className = 'frist-bar-fg' + (pct >= 100 ? ' over' : pct >= 70 ? ' warn' : '');
+  document.getElementById('bar-pct').textContent = pct + '% verstrichen';
+
+  // Warnbox
+  var warn = document.getElementById('warnbox');
+  var warnTexte = [];
+  if (bekanntgabeVerschoben && bekanntgabeRech) {
+    warnTexte.push('\u2139 Bekanntgabe verschoben: Der 4. Tag nach Bescheidausstellung fiel auf '
+      + fmtDate(bekanntgabeRech) + ' (Sonntag, Samstag oder gesetzlicher Feiertag). '
+      + 'Die Bekanntgabe gilt daher erst am n\u00e4chsten Werktag als bewirkt: <b>' + fmtDate(bekanntgabe) + '</b> (\u00a7 122 Abs. 2 S. 3 AO i.V.m. \u00a7 108 Abs. 3 AO).');
+  }
+  if (verschoben) {
+    warnTexte.push('⚠ Fristende wurde nach § 108 Abs. 3 AO verschoben: '
+      + fmtDate(fristEndeRech) + ' war kein Werktag → maßgebliches Fristende: '
+      + fmtDate(fristEndeMass) + '.');
+  }
+  if (verbleibend >= 0 && verbleibend <= 7) {
+    warnTexte.push('⚠ Weniger als 8 Tage bis Fristablauf — Einspruch/Klage umgehend einlegen oder Fristverlängerung beantragen.');
+  }
+  if (verbleibend < 0) {
+    warnTexte.push('⚠ Die Frist ist abgelaufen. Ein Einspruch wäre grundsätzlich nur noch nach Wiedereinsetzung in den vorigen Stand möglich (§ 110 AO).');
+  }
+  if (warnTexte.length) {
+    warn.innerHTML = warnTexte.join('<br><br>');
+    warn.style.display = 'block';
+  } else {
+    warn.style.display = 'none';
+  }
+
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('result').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+// Heute als Default setzen
+(function(){
+  var today = new Date();
+  var y = today.getFullYear();
+  var m = String(today.getMonth()+1).padStart(2,'0');
+  var d = String(today.getDate()).padStart(2,'0');
+  document.getElementById('bescheidDatum').value = y+'-'+m+'-'+d;
+})();
+</script>
+</body>
+</html>
